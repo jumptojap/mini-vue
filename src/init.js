@@ -1,3 +1,5 @@
+import { observe } from "./observe"
+
 export function initMixin(Vue){
     Vue.prototype._init = function(options){
         const vm = this
@@ -14,6 +16,17 @@ function initState(vm){
 function initData(vm){
     let data = vm.$options.data
     data = typeof data === 'function'? data().bind(vm) : data
-    console.log(data);
-    
+    vm._data = data
+    observe(data)
+    Object.keys(data).forEach(key => proxy(vm, '_data', key))
+}
+function proxy(vm, target, key){
+    Object.defineProperty(vm, key, {
+        get(){
+            return vm[target][key]
+        },
+        set(newValue){
+            vm[target][key] = newValue
+        }
+    })
 }
