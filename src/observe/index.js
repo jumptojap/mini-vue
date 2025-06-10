@@ -1,17 +1,34 @@
+import { proto } from "../array"
 export function observe(data){
     if(typeof data !== 'object' || data === null){
         return
+    }
+    if(data._ob_){
+        return data._ob_
     }
     return new Observer(data)
 }
 class Observer{
     constructor(data){
-        this.data = data
-        this.walk(data)
+        Object.defineProperty(data, '_ob_', {
+            value: this,
+            enumerable: false
+        })
+        if(Array.isArray(data)){ 
+            data.__proto__ = proto
+            this.observeArray(data)
+        }else{
+            this.walk(data)
+        }
     }
     walk(data){
         Object.keys(data).forEach(key => {
             defineReactive(data, key, data[key])
+        })
+    }
+    observeArray(data){
+        data.forEach(item => {
+            observe(item)
         })
     }
 }
