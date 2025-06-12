@@ -1,8 +1,8 @@
-import { proto } from "../array"
+import { proto } from "./array"
+
 export function observe(data){
-    if(typeof data !== 'object' || data === null){
+    if(typeof data !== 'object' || data === null)
         return
-    }
     if(data._ob_){
         return data._ob_
     }
@@ -14,7 +14,7 @@ class Observer{
             value: this,
             enumerable: false
         })
-        if(Array.isArray(data)){ 
+        if(Array.isArray(data)){
             data.__proto__ = proto
             this.observeArray(data)
         }else{
@@ -27,24 +27,21 @@ class Observer{
         })
     }
     observeArray(data){
-        data.forEach(item => {
-            observe(item)
-        })
+        data.forEach(item => observe(item))
     }
 }
 export function defineReactive(target, key, value){
-    if(typeof value === 'object' && value !== null){
-        observe(value)
-    }
+    observe(value)
     Object.defineProperty(target, key, {
+        configurable: true,
+        enumerable: true,
+        set(newValue){
+            if(value === newValue)
+                return
+            value = newValue
+        },
         get(){
             return value
-        },
-        set(newValue){
-            if(newValue === value){
-                return
-            }
-            value = newValue
         }
     })
 }

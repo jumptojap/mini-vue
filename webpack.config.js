@@ -12,7 +12,7 @@ module.exports = {
     devtool: 'source-map',              // 方便调试源码
     devServer: {
         static: path.resolve(__dirname, 'public'),
-        port: 8080,
+        port: 8082,
         open: true, // 自动打开浏览器
     }
 };

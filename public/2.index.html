@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript" src="mini-vue.js"></script>
+</head>
+<body>
+    <div id = "app" a='1' b="2">
+        <span>12      
+            3</span>
+        {{name}} {{age}}
+    </div>
+    <script type="text/javascript">
+        const vm = new Vue({
+            data:{
+                obj: {
+                    name: "zhu",
+                    age: 18
+                },
+                arr: [1,2,3,4,{name: "zheng"}]
+            },
+            el: '#app',//将数据解析到el元素上，
+            // template: `
+            //     <div>
+            //         {{name}} {{age}}
+            //     </div>
+            // `
+            // render(h){
+            //     return h('div', this.obj.name, this.obj.age)
+            // }
+        })
+        //vm.$mount() 没有指定el，需要手动挂载数据
+        //1.模版引擎 性能很差 需要正则匹配替换 1.0时候没有引入虚拟dom
+        //2. 采用虚拟dom,数据变化后比较虚拟dom差异，最后更新到需要更新的地方
+        //3.核心就是将模版变成js语法，最后通过js语法生成虚拟dom
+
+        //从一个东西变成另一个东西 语法之间的转换
+        // 例如css压缩 template需要先变成语法树再重新组装代码成为新的语法
+        // 将template模版转换成ast语法树 再转换成render函数 最后生成虚拟dom 最后更新到需要更新的地方
+
+    </script>
+</body>
+</html>
