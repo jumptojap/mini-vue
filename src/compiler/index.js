@@ -7,14 +7,8 @@ export function compileToFunction(template){
     console.log(ast)
     //2.将ast语法树转换成render函数(render函数返回虚拟dom)
     let code = codegen(ast)
-    console.log(code)
-
-    //3.将render函数转换成虚拟dom
-    //4.将虚拟dom转换成真实dom
-    //5.将真实dom插入到el中
-    //6.将真实dom转换成虚拟dom
-    //7.将虚拟dom转换成真实dom
-    //8.将真实dom插入到el中
+    let render = new Function(`with(this){return ${code}}`) 
+    return render
 }
 
 function codegen(ast){
