@@ -1,10 +1,15 @@
+import Watcher from "./observe/watcher"
 import { createElementVNode, createTextVNode } from "./vdom"
 
 export function mountComponent(vm, el){
     //这里的el是真实dom
     vm.$el = el
     // 1.调用render方法产生虚拟dom
-    vm._update(vm._render())
+    const updateComponent = () => {
+        vm._update(vm._render())
+    }
+    const watcher = new Watcher(vm, updateComponent, true) // true表示是一个渲染过程
+    console.log(watcher)
 }
 function createElm(vnode){  
     let {tag, data, key, children, text} = vnode

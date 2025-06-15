@@ -1,5 +1,5 @@
 import { proto } from "./array"
-
+import Dep from "./dep"
 export function observe(data){
     if(typeof data !== 'object' || data === null)
         return
@@ -32,15 +32,21 @@ class Observer{
 }
 export function defineReactive(target, key, value){
     observe(value)
+    let dep = new Dep()
     Object.defineProperty(target, key, {
         configurable: true,
         enumerable: true,
         set(newValue){
             if(value === newValue)
                 return
+            observe(newValue)
             value = newValue
+            dep.notify()
         },
         get(){
+            if(Dep.target){
+                dep.depend()
+            }
             return value
         }
     })

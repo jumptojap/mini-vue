@@ -10,7 +10,7 @@
     <div id = "app" a='1' b="2" style="color:blue;font-size:12px">
         <span style="color:red;font-size:12px">12      
             3</span>
-        {{name}} {{age}}
+        {{name}}-{{age}}-{{name}}
     </div>
     <script type="text/javascript">
         const vm = new Vue({
@@ -36,7 +36,10 @@
         //从一个东西变成另一个东西 语法之间的转换
         // 例如css压缩 template需要先变成语法树再重新组装代码成为新的语法
         // 将template模版转换成ast语法树 再转换成render函数 最后生成虚拟dom 最后更新到需要更新的地方
-        
+        setTimeout(() => {
+            vm.name = "zheng"
+            vm.age = 20
+        }, 1000)
     </script>
 </body>
 </html>
