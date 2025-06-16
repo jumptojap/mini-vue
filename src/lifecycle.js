@@ -9,7 +9,6 @@ export function mountComponent(vm, el){
         vm._update(vm._render())
     }
     const watcher = new Watcher(vm, updateComponent, true) // true表示是一个渲染过程
-    console.log(watcher)
 }
 function createElm(vnode){  
     let {tag, data, key, children, text} = vnode
@@ -61,7 +60,6 @@ export function initLifeCycle(Vue){
     }
     Vue.prototype._render = function(){
         const vm = this
-        console.log(vm.$options.render)
         return vm.$options.render.call(vm)
     }
     Vue.prototype._c = function(){
