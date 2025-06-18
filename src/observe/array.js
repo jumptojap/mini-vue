@@ -17,6 +17,7 @@ methods.forEach(method => {
         if(inserted){
             this._ob_.observeArray(inserted)
         }
+        this._ob_.dep.notify()
         return result
     }
 })

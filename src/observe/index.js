@@ -10,6 +10,9 @@ export function observe(data){
 }
 class Observer{
     constructor(data){
+        this.dep = new Dep()
+
+        
         Object.defineProperty(data, '_ob_', {
             value: this,
             enumerable: false
@@ -30,8 +33,18 @@ class Observer{
         data.forEach(item => observe(item))
     }
 }
+function dependArray(value){
+    value.forEach(item => {
+        const childOb = observe(item)
+        childOb?.dep.depend()
+        if(Array.isArray(item)){
+            dependArray(item)
+        }
+    })
+}
 export function defineReactive(target, key, value){
-    observe(value)
+    //如果value是对象，则递归观察
+    const childOb = observe(value)
     let dep = new Dep()
     Object.defineProperty(target, key, {
         configurable: true,
@@ -46,6 +59,12 @@ export function defineReactive(target, key, value){
         get(){
             if(Dep.target){
                 dep.depend()
+                if(childOb){
+                    childOb.dep.depend()
+                    if(Array.isArray(value)){
+                        dependArray(value)
+                    }   
+                }
             }
             return value
         }
