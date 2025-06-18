@@ -83,3 +83,10 @@ export function initLifeCycle(Vue){
 // 3）将ast语法树转换成render函数 
 // 4）render函数执行的返回结果 用这个结果生成虚拟dom(无需再次执行ast语法树转化)
 // 5）用虚拟dom生成真实dom
+
+export function callHook(vm, hook){
+    const handlers = vm.$options[hook]
+    if(handlers){
+        handlers.forEach(handler => handler.call(vm))
+    }
+}

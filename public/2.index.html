@@ -13,10 +13,26 @@
         {{name}}-{{age}}-{{name}}
     </div>
     <script type="text/javascript">
+        Vue.mixin({
+            created(){
+                console.log("全局混入")
+            },
+            a:11,
+            b:12
+        })
+        Vue.mixin({
+            created(){
+                console.log("全局混入2")
+            },
+            a:12
+        })
         const vm = new Vue({
             data:{
                 name: "zhu",
                 age: 18
+            },
+            created(){
+                console.log("组件混入")
             },
             el: '#app',//将数据解析到el元素上，
             // template: `
@@ -36,10 +52,9 @@
         //从一个东西变成另一个东西 语法之间的转换
         // 例如css压缩 template需要先变成语法树再重新组装代码成为新的语法
         // 将template模版转换成ast语法树 再转换成render函数 最后生成虚拟dom 最后更新到需要更新的地方
-        vm.name = "zheng"
-        vm.$nextTick(() => {
-            console.log(document.querySelector("#app").innerHTML)
-        })
+        
+      
+        
     </script>
 </body>
 </html>
