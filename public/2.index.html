@@ -10,7 +10,7 @@
     <div id = "app" a='1' b="2" style="color:blue;font-size:12px">
         <span style="color:red;font-size:12px">12      
             3</span>
-        {{arr}}
+        {{fullName}} {{fullName}} {{fullName}}
     </div>
     <script type="text/javascript">
         Vue.mixin({
@@ -31,6 +31,12 @@
                 name: "zhu",
                 age: 18,
                 arr: [1,2,3,{a:1},[1,2,3,[]]]
+            },
+            computed:{
+                fullName(){
+                    console.log("fullName")
+                    return this.name + this.age
+                }
             },
             created(){
                 console.log("组件混入")
@@ -55,7 +61,8 @@
         // 例如css压缩 template需要先变成语法树再重新组装代码成为新的语法
         // 将template模版转换成ast语法树 再转换成render函数 最后生成虚拟dom 最后更新到需要更新的地方
         setTimeout(() => {
-            vm.arr[4][3].push(100)
+            vm.name = "zheng"   
+            vm.age = 20
         }, 1000);
 
       

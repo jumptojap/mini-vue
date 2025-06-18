@@ -1,4 +1,4 @@
-import Dep from "./dep"
+import Dep, { popTarget, pushTarget } from "./dep"
 
 let id = 0
 class Watcher{
@@ -8,7 +8,10 @@ class Watcher{
         this.renderWatcher = options
         this.deps = [] // 后续我们实现计算属性，和清理工作，需要用到这个数组
         this.depsId = new Set()
-        this.get()
+        this.lazy = options.lazy
+        this.dirty = this.lazy
+        this.vm = vm
+        this.lazy || this.get()
     }
     // 一个组件，对应多个属性，重复的属性，不能重复收集
     addDep(dep){
@@ -20,18 +23,32 @@ class Watcher{
         }
     }
     get(){
-        Dep.target = this
-        this.getter()
-        Dep.target = null
+        pushTarget(this)
+        const value = this.getter.call(this.vm)
+        popTarget()
+        return value
     }
     update(){
         // this.get()
-        
-        queueWatcher(this) // 等待所有同步代码执行完毕后，再执行watcher的更新
+        if(this.lazy){
+            this.dirty = true
+        }else{
+            queueWatcher(this) // 等待所有同步代码执行完毕后，再执行watcher的更新
+        }
+    }
+    depend(){
+        let i = this.deps.length
+        while(i--){
+            this.deps[i].depend()
+        }
     }
     run(){
         console.log("update")
         this.get()
+    }
+    evaluate(){
+        this.dirty = false
+        this.value = this.get()
     }
 }
 let queue = []
