@@ -10,6 +10,9 @@ export function initState(vm){
     if(options.computed){
         initComputed(vm)
     }
+    if(options.watch){
+        initWatch(vm)
+    }
 }
 function initData(vm){
     let data = vm.$options.data
@@ -59,4 +62,21 @@ function defineComputed(vm, key, userDef){
         get:createComputedGetter(key),
         set:setter
     })
+}
+function initWatch(vm){
+    const watch = vm.$options.watch
+    for(let key in watch){
+        const handler = watch[key] //字符串 数组 函数，不考虑对象也就是watch:{a:{handler:fn,immediate:true}}
+        if(Array.isArray(handler)){
+            handler.forEach(item => createWatcher(vm, key, item))
+        }else{
+            createWatcher(vm, key, handler)
+        }
+    }
+}
+function createWatcher(vm, key, handler){
+    if(typeof handler === 'string'){
+        handler = vm[handler]
+    }
+    return vm.$watch(key, handler)
 }

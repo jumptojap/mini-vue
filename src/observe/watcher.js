@@ -2,16 +2,24 @@ import Dep, { popTarget, pushTarget } from "./dep"
 
 let id = 0
 class Watcher{
-    constructor(vm, fn, options){
+    constructor(vm, expOrFn, options, cb){
         this.id = id++
-        this.getter = fn // updateComponent
+        if(typeof expOrFn === 'string'){
+            this.getter = function(){
+                return vm[expOrFn]
+            }
+        }else{
+            this.getter = expOrFn
+        }
+        this.cb = cb
         this.renderWatcher = options
         this.deps = [] // 后续我们实现计算属性，和清理工作，需要用到这个数组
         this.depsId = new Set()
         this.lazy = options.lazy
         this.dirty = this.lazy
         this.vm = vm
-        this.lazy || this.get()
+        this.user = options.user
+        this.value = this.lazy ? undefined : this.get()
     }
     // 一个组件，对应多个属性，重复的属性，不能重复收集
     addDep(dep){
@@ -44,7 +52,16 @@ class Watcher{
     }
     run(){
         console.log("update")
-        this.get()
+        if(this.user){
+            const oldValue = this.value
+            const newValue = this.get()
+            if(oldValue !== newValue){
+                this.value = newValue
+                this.cb.call(this.vm, newValue, oldValue)
+            }
+        }else{
+            this.get()
+        }
     }
     evaluate(){
         this.dirty = false
