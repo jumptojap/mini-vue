@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script type="text/javascript" src="mini-vue.js"></script>
+    
 </head>
 <body>
     <div id = "app" a='1' b="2" style="color:blue;font-size:12px">
@@ -12,20 +12,21 @@
             3</span>
         {{newName}} {{newName}} {{newName}}
     </div>
+    <script type="text/javascript" src="mini-vue.js"></script>
     <script type="text/javascript">
-        Vue.mixin({
-            created(){
-                console.log("全局混入")
-            },
-            a:11,
-            b:12
-        })
-        Vue.mixin({
-            created(){
-                console.log("全局混入2")
-            },
-            a:12
-        })
+        // Vue.mixin({
+        //     created(){
+        //         console.log("全局混入")
+        //     },
+        //     a:11,
+        //     b:12
+        // })
+        // Vue.mixin({
+        //     created(){
+        //         console.log("全局混入2")
+        //     },
+        //     a:12
+        // })
         const vm = new Vue({
             data:{
                 firstName: "zhu",

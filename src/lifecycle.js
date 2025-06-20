@@ -1,5 +1,6 @@
 import Watcher from "./observe/watcher"
 import { createElementVNode, createTextVNode } from "./vdom"
+import { patch } from "./vdom/patch"
 
 export function mountComponent(vm, el){
     //这里的el是真实dom
@@ -10,53 +11,21 @@ export function mountComponent(vm, el){
     }
     const watcher = new Watcher(vm, updateComponent, true) // true表示是一个渲染过程
 }
-function createElm(vnode){  
-    let {tag, data, key, children, text} = vnode
-    if(typeof tag === 'string'){
-        vnode.el = document.createElement(tag) // 虚拟dom的el指向真实dom
-        updateProperties(vnode.el, data)
-        children.forEach(child => {
-            vnode.el.appendChild(createElm(child))
-        })
-    }else{
-        vnode.el = document.createTextNode(text)
-    }
-    return vnode.el
-}
-function updateProperties(el, props){
-    for(let key in props){
-        if(key === 'style'){
-            for(let styleName in props.style){
-                el.style[styleName] = props.style[styleName]
-            }
-        }else{
-            el.setAttribute(key, props[key])
-        }
-    }
-}
-function patch(oldVnode, vnode){
-    const isRealElement = oldVnode.nodeType
-    if(isRealElement){
-        //初始化
-        const oldElm = oldVnode
-        const parentElm = oldVnode.parentNode
-        let newElm = createElm(vnode)
-        parentElm.insertBefore(newElm, oldElm.nextSibling)
-        parentElm.removeChild(oldElm) //删除老节点
-        return newElm
-    }else{
-        //更新过程
-    }
-}
 
 export function initLifeCycle(Vue){
     //将虚拟dom转化成真实dom
     Vue.prototype._update = function(vnode){
         const vm = this
-        const el = vm.$el
-        //既有初始化过程又有更新过程
-        vm.$el = patch(el, vnode)
+        const prevVnode = vm._vnode  // 保存上一次的虚拟节点
+        vm._vnode = vnode           // 更新当前虚拟节点
         
+        if(!prevVnode){
+            // 初始化：真实DOM vs 虚拟节点
+            vm.$el = patch(vm.$el, vnode)
+        }else{
+            // 更新：虚拟节点 vs 虚拟节点
+            vm.$el = patch(prevVnode, vnode)
+        }
     }
     Vue.prototype._render = function(){
         const vm = this
