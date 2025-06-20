@@ -27,40 +27,40 @@
         //     },
         //     a:12
         // })
-        const vm = new Vue({
-            data:{
-                firstName: "zhu",
-                lastName: "zheng",
-                age: 18,
-                arr: [1,2,3,{a:1},[1,2,3,[]]]
-            },
-            computed:{
-                fullName(){
-                    return this.firstName + this.lastName
-                },
-                newName(){
-                    return this.fullName + "2"
-                }
+        // const vm = new Vue({
+        //     data:{
+        //         firstName: "zhu",
+        //         lastName: "zheng",
+        //         age: 18,
+        //         arr: [1,2,3,{a:1},[1,2,3,[]]]
+        //     },
+        //     computed:{
+        //         fullName(){
+        //             return this.firstName + this.lastName
+        //         },
+        //         newName(){
+        //             return this.fullName + "2"
+        //         }
 
-            },
-            watch:{
-                fullName(newVal, oldVal){
-                    console.log("监视到变化", newVal, oldVal)
-                }
-            },
-            created(){
-                console.log("组件混入")
-            },
-            el: '#app',//将数据解析到el元素上，
-            // template: `
-            //     <div>
-            //         {{name}} {{age}}
-            //     </div>
-            // `
-            // render(h){
-            //     return h('div', this.obj.name, this.obj.age)
-            // }
-        })
+        //     },
+        //     watch:{
+        //         fullName(newVal, oldVal){
+        //             console.log("监视到变化", newVal, oldVal)
+        //         }
+        //     },
+        //     created(){
+        //         console.log("组件混入")
+        //     },
+        //     el: '#app',//将数据解析到el元素上，
+        //     // template: `
+        //     //     <div>
+        //     //         {{name}} {{age}}
+        //     //     </div>
+        //     // `
+        //     // render(h){
+        //     //     return h('div', this.obj.name, this.obj.age)
+        //     // }
+        // })
     
         //vm.$mount() 没有指定el，需要手动挂载数据
         //1.模版引擎 性能很差 需要正则匹配替换 1.0时候没有引入虚拟dom
@@ -70,15 +70,26 @@
         //从一个东西变成另一个东西 语法之间的转换
         // 例如css压缩 template需要先变成语法树再重新组装代码成为新的语法
         // 将template模版转换成ast语法树 再转换成render函数 最后生成虚拟dom 最后更新到需要更新的地方
-        setTimeout(() => {
-            vm.firstName = "zhang"   
+        // setTimeout(() => {
+        //     vm.firstName = "zhang"   
             
-        }, 1000);
+        // }, 1000);
 
-        setTimeout(() => {
-            vm.lastName = "san"
-        }, 2000);
-        
+        // setTimeout(() => {
+        //     vm.lastName = "san"
+        // }, 2000);
+        Vue.component("my-button", {
+            template: `<button>按钮</button>`
+        })
+        const Sub = Vue.extend({
+            data(){
+                return {
+                    name: "zhangsan"
+                }
+            },
+            template: `<div><my-button>{{name}}</my-button></div>`
+        })
+        new Sub().$mount("#app")
     </script>
 </body>
 </html>
