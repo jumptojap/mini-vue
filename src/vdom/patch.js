@@ -1,8 +1,22 @@
 import { isSameVnode } from "."
-
+function createComponent(vnode){
+    const data = vnode.data
+    const init = data.hook?.init
+    if(init){
+        init(vnode)
+    }
+    //如果组件初始化完成，则返回true
+    if(vnode.componentInstance){
+        return true
+    }
+    return false
+}
 export function createElm(vnode){  
     let {tag, data, key, children, text} = vnode
     if(typeof tag === 'string'){
+        if(createComponent(vnode)){
+            return vnode.componentInstance.$el
+        }
         vnode.el = document.createElement(tag) // 虚拟dom的el指向真实dom
         updateProperties(vnode.el, {}, data)
         children.forEach(child => {
@@ -39,6 +53,9 @@ export function updateProperties(el, oldProps, props){
     
 }
 export function patch(oldVnode, vnode){
+    if(!oldVnode){
+        return createElm(vnode)
+    }
     const isRealElement = oldVnode.nodeType
     if(isRealElement){
         //初始化

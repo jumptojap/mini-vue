@@ -16,11 +16,20 @@ export function createElementVNode(vm, tag, data, ...children){
         const Ctor = vm.$options.components[tag]
         return createComponentVNode(vm, tag, key, data, children, Ctor)
     }
-    return vnode(vm, tag, key, data, children)
 }
 function createComponentVNode(vm, tag, key, data, children, Ctor){
     if(typeof Ctor === 'object' && Ctor !== null){
         Ctor = vm.$options._base.extend(Ctor)
+    }
+    data.hook = {
+        // 稍后创建真实节点后，如果是组件，会调用此init方法
+        init(vnode){
+            const vm = vnode.vm
+            //保存组件实例到虚拟节点上
+            vnode.componentInstance = new vnode.componentOptions.Ctor()
+            vnode.componentInstance.$mount()
+            vnode.el = vnode.componentInstance.$el
+        }
     }
     return vnode(vm, tag, key, data,children, null, {Ctor})
 }
